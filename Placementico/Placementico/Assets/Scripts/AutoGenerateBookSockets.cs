@@ -12,17 +12,16 @@ public class AutoGenerateBookSockets : MonoBehaviour
     [SerializeField] private Vector3 socketDirection = Vector3.right;
     [SerializeField] private float extraGap = 0.01f;
 
-    [Header("Book Standing Rotation")]
+    [Header("Book Rotation")]
     [SerializeField] private Vector3 socketRotationOffset = new Vector3(0f, 0f, 90f);
 
     [Header("Socket Settings")]
     [SerializeField] private InteractionLayerMask bookInteractionLayer;
-    [SerializeField] private InteractionLayerMask placedBookInteractionLayer;
-    [SerializeField] private Vector3 socketTriggerSize = new Vector3(0.12f, 0.35f, 0.22f);
 
     private void Start()
     {
         GenerateSockets();
+        CleanupManager.Instance.Initialize(booksParent.childCount);
     }
 
     private void GenerateSockets()
@@ -37,10 +36,14 @@ public class AutoGenerateBookSockets : MonoBehaviour
 
         float spacing = GetBookSpacing(worldDirection, socketRotation);
 
+        Vector3 socketSize = GetBookSocketSize();
+
         for (int i = 0; i < socketCount; i++)
         {
             GameObject socketObj = new GameObject($"BookSocket_{i + 1}");
-            socketObj.transform.SetParent(transform);
+
+            socketObj.transform.SetParent(transform, false);
+            socketObj.transform.localScale = Vector3.one;
 
             socketObj.transform.position =
                 socketStartPoint.position + worldDirection * spacing * i;
@@ -49,12 +52,12 @@ public class AutoGenerateBookSockets : MonoBehaviour
 
             BoxCollider trigger = socketObj.AddComponent<BoxCollider>();
             trigger.isTrigger = true;
-            trigger.size = socketTriggerSize;
+            trigger.size = socketSize;
 
-            BookSocketInteractor socket = socketObj.AddComponent<BookSocketInteractor>();
+            BookSocketInteractor socket =
+                socketObj.AddComponent<BookSocketInteractor>();
+
             socket.interactionLayers = bookInteractionLayer;
-            socket.unplacedBookLayer = bookInteractionLayer;
-            socket.placedBookLayer = placedBookInteractionLayer;
         }
     }
 
@@ -82,5 +85,21 @@ public class AutoGenerateBookSockets : MonoBehaviour
             bookSize.z * localDirection.z;
 
         return sizeAlongDirection + extraGap;
+    }
+
+    private Vector3 GetBookSocketSize()
+    {
+        if (booksParent.childCount == 0)
+            return Vector3.one * 0.1f;
+
+        Collider bookCollider =
+            booksParent.GetChild(0).GetComponentInChildren<Collider>();
+
+        if (bookCollider != null)
+        {
+            return bookCollider.bounds.size;
+        }
+
+        return booksParent.GetChild(0).localScale;
     }
 }

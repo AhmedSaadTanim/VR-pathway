@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7757300291151268163}
   - component: {fileID: 5319055386430442046}
   - component: {fileID: 8232710486087544353}
+  - component: {fileID: 3249830024067886786}
   m_Layer: 0
   m_Name: Book
   m_TagString: Untagged
@@ -270,3 +271,17 @@ MonoBehaviour:
   m_LimitAngularVelocity: 0
   m_MaxLinearVelocityDelta: 10
   m_MaxAngularVelocityDelta: 20
+--- !u!114 &3249830024067886786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9072868649816581194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92490d15e8f450d4597077d82628bed4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CleanableObject
+  unplacedLayer:
+    m_Bits: 1073741824
